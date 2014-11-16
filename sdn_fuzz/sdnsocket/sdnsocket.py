@@ -11,6 +11,14 @@ class SDNSocket(object):
         '''
         pass
 
+    def blocking_read(self,num_bytes_to_read):
+        '''
+        Threadsafe.  Doesn't return until can return some bytes.
+
+        @returns {bytearray} --- Returns at most num_bytes bytes.
+        '''
+        pass
+
     def write(self,bytes_to_write):
         '''
         Threadsafe.
