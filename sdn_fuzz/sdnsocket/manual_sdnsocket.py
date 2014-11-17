@@ -32,9 +32,9 @@ class ManualSDNSocket(SDNSocket):
         self._array_condition.acquire()
         while True:
             to_return = self.read(num_bytes_to_read)
-            if len(to_return) == 0:
+            if len(to_return) != 0:
                 break
-            self._array_condition.await()
+            self._array_condition.wait()
             
         self._array_condition.release()
         return to_return

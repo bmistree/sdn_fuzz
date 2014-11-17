@@ -42,9 +42,11 @@ class ManualSocketTest(TestClass):
         num_bytes_to_delayed_write = int(100 * random()) + 100
         t = Thread(
             target=self._delayed_write_random_bytes,
-            args=(10,socket,num_bytes_to_delayed_write))
+            args=(3,socket,num_bytes_to_delayed_write))
+        t.setDaemon(True)
         t.start()
         read_array = socket.blocking_read(num_bytes_to_delayed_write)
+        
         if len(read_array) != num_bytes_to_delayed_write:
             return False
 
