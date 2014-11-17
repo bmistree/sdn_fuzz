@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 from manual_socket import ManualSocketTest
+from sdn_single_message import SDNSingleMessageTest
 
 test_class_constructors = [
+    SDNSingleMessageTest,
     ManualSocketTest,
     ]
 
