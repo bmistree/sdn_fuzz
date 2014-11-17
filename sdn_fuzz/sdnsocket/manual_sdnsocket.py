@@ -1,4 +1,3 @@
-
 from sdnsocket import SDNSocket
 from threading import RLock, Condition
 
