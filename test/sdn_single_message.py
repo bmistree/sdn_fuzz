@@ -68,10 +68,21 @@ class SDNSingleMessageTest(TestClass):
         if type(read_barrier) != type(barrier_to_send):
             return False
         
+
+        #### CHECK THAT WE CAN CORRECTLY DESERIALIZE OTHER MESSAGES #####
+        config_request_to_send = self._generate_config_request()
+        config_request_to_send.serialize()
+        sdn_socket.write(config_request_to_send.buf)
+        
+        # should be of type additional_parsers.UnparsedMessage
+        read_config_request = sdn_message_reader.blocking_read_sdn_message()
+
+        if read_config_request.buf != config_request_to_send.buf:
+            return False
         
         return True
-        
 
+    
     def _generate_add_flowmod(self):
         in_port = 32
         rule = nx_match.ClsRule()
@@ -94,7 +105,8 @@ class SDNSingleMessageTest(TestClass):
             datapath, match, cookie, command, idle_timeout, hard_timeout,
             priority, buffer_id, out_port, flags, actions)
 
-
     def _generate_barrier(self):
         return ofproto_v1_0_parser.OFPBarrierRequest(OF_1_0_DATAPATH)
 
+    def _generate_config_request(self):
+        return ofproto_v1_0_parser.OFPGetConfigRequest(OF_1_0_DATAPATH)

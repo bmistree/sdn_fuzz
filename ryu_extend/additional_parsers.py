@@ -55,3 +55,86 @@ class BarrierRequestParser(object):
         to_return = OFPBarrierRequest(datapath)
         to_return.set_headers(version,msg_type,msg_len,xid)
         return to_return
+
+############ HANDLE PARSING ALL OTHER TYPES ######################
+
+
+class UnparsedMessage(object):
+    '''
+    Controller to switch messages do not all have deserializers
+    defined for them.  Of these, we only really need to be able to
+    distinguish barrier requests and flow mods, which we do above.
+    All other messages can just get passed back and forth, without
+    being deserialized.  As a result, this class just wraps the
+    underlying raw bytes of such a message.
+    '''
+    def __init__(self,datapath,version,msg_type,msg_len,xid,buf):
+        self.datapath = datapath
+        self.version = version
+        self.msg_type = msg_type
+        self.msg_len = msg_len
+        self.xid = xid
+        self.buf = buf
+        
+
+from ryu.ofproto.ofproto_v1_0 import OFPT_FEATURES_REQUEST
+@_register_parser
+@_set_msg_type(OFPT_FEATURES_REQUEST)
+class DummyFeaturesRequestParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_GET_CONFIG_REQUEST
+@_register_parser
+@_set_msg_type(OFPT_GET_CONFIG_REQUEST)
+class DummyGetConfigRequestParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_SET_CONFIG
+@_register_parser
+@_set_msg_type(OFPT_SET_CONFIG)
+class DummySetConfigParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_PACKET_OUT
+@_register_parser
+@_set_msg_type(OFPT_PACKET_OUT)
+class DummyPacketOutParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_PORT_MOD
+@_register_parser
+@_set_msg_type(OFPT_PORT_MOD)
+class DummyPortModParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+
+from ryu.ofproto.ofproto_v1_0 import OFPT_QUEUE_GET_CONFIG_REQUEST
+@_register_parser
+@_set_msg_type(OFPT_QUEUE_GET_CONFIG_REQUEST)
+class DummyQueueGetConfigRequestParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_STATS_REQUEST
+@_register_parser
+@_set_msg_type(OFPT_STATS_REQUEST)
+class DummyQueueGetConfigRequestParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
