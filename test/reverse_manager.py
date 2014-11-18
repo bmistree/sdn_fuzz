@@ -18,6 +18,9 @@ sys.path.append(sdn_fuzz_folder)
 
 from test_class import TestClass
 from sdn_fuzz.sdnsocket.manual_sdnsocket import ManualSDNSocket
+from sdn_fuzz.sdnsocket.crossover_manual_sdn_socket import (
+    crossover_manual_sdn_socket)
+
 from sdn_fuzz.sdn_message_reader import SDNMessageReader
 from sdn_fuzz.message_manager.reverse_flowmods_message_manager import (
     ReverseFlowmodsMessageManager)
@@ -38,11 +41,15 @@ class ReverseManagerTest(TestClass):
 
         # incoming_socket ---> Manager ---> outgoing_socket
         incoming_sdn_socket = ManualSDNSocket()
-        outgoing_sdn_socket = ManualSDNSocket()
-        outgoing_sdn_message_reader = SDNMessageReader(outgoing_sdn_socket)
+        
+        # outgoing_socket above gets written by outgoing_socket_manager
+        # and read from outgoing_socket_switch
+        (outgoing_socket_manager,outgoing_socket_switch) = (
+            crossover_manual_sdn_socket())
+        outgoing_sdn_message_reader = SDNMessageReader(outgoing_socket_switch)
         
         write_through_manager = ReverseFlowmodsMessageManager(
-            incoming_sdn_socket,outgoing_sdn_socket)
+            incoming_sdn_socket,outgoing_socket_manager)
         write_through_manager.start_service()
         
 

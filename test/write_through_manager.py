@@ -26,7 +26,6 @@ from sdn_fuzz.message_manager.write_through_message_manager import (
     WriteThroughMessageManager)
 
 
-
 class WriteThroughManagerTest(TestClass):
 
     def test_name(self):
