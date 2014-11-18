@@ -75,6 +75,12 @@ class UnparsedMessage(object):
         self.msg_len = msg_len
         self.xid = xid
         self.buf = buf
+
+    def serialize(self):
+        '''
+        Do nothing in this method.  Only adding it so that have
+        symmetry with other ryu messages.
+        '''
         
 
 from ryu.ofproto.ofproto_v1_0 import OFPT_FEATURES_REQUEST
