@@ -23,7 +23,7 @@ class FlowModParser(object):
             OFP_FLOW_MOD_PACK_STR0,buf, offset)
 
         offset = OFP_FLOW_MOD_SIZE
-         
+        
         # read actions
         actions = []
         while offset < msg_len:
