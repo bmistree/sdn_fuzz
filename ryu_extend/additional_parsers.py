@@ -39,3 +39,19 @@ class FlowModParser(object):
 
         flowmod_msg.set_headers(version,msg_type,msg_len,xid)
         return flowmod_msg
+
+
+############ HANDLE PARSING BARRIERS ######################
+    
+from ryu.ofproto.ofproto_v1_0_parser import OFPBarrierRequest
+from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST
+
+@_register_parser
+@_set_msg_type(OFPT_BARRIER_REQUEST)
+class BarrierRequestParser(object):
+    
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        to_return = OFPBarrierRequest(datapath)
+        to_return.set_headers(version,msg_type,msg_len,xid)
+        return to_return

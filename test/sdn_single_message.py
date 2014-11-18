@@ -43,6 +43,8 @@ class SDNSingleMessageTest(TestClass):
         sdn_socket = ManualSDNSocket()
         sdn_message_reader = SDNMessageReader(sdn_socket)
 
+        #### CHECK THAT WE CAN DESERIALIZE FLOWMODS #####
+        
         # write a flowmod
         written_sdn_message = self._generate_add_flowmod()        
         written_sdn_message.serialize()
@@ -56,6 +58,17 @@ class SDNSingleMessageTest(TestClass):
         if str(written_sdn_message) != str(read_sdn_message):
             return False
 
+
+        #### CHECK THAT WE CAN DESERIALIZE BARRIERS #####
+        barrier_to_send = self._generate_barrier()
+        barrier_to_send.serialize()
+        sdn_socket.write(barrier_to_send.buf)
+
+        read_barrier = sdn_message_reader.blocking_read_sdn_message()
+        if type(read_barrier) != type(barrier_to_send):
+            return False
+        
+        
         return True
         
 
@@ -80,3 +93,8 @@ class SDNSingleMessageTest(TestClass):
         return ofproto_v1_0_parser.OFPFlowMod(
             datapath, match, cookie, command, idle_timeout, hard_timeout,
             priority, buffer_id, out_port, flags, actions)
+
+
+    def _generate_barrier(self):
+        return ofproto_v1_0_parser.OFPBarrierRequest(OF_1_0_DATAPATH)
+
