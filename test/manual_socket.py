@@ -68,5 +68,5 @@ class ManualSocketTest(TestClass):
         @returns {bytearray} --- What writing into socket
         '''
         to_write_array = bytearray(os.urandom(num_bytes_to_write))
-        socket.write(to_write_array)
+        socket.write_into_read(to_write_array)
         return to_write_array

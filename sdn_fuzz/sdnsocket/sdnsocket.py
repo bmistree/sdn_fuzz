@@ -19,9 +19,9 @@ class SDNSocket(object):
         '''
         pass
 
-    def write(self,bytes_to_write):
+    def write_into_read(self,bytes_to_write):
         '''
-        Threadsafe.
+        Threadsafe.  Write into read buffer.
         
         @param {bytearray} bytes_to_write
         '''

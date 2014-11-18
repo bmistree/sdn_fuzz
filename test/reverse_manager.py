@@ -55,13 +55,13 @@ class ReverseManagerTest(TestClass):
             flowmod_to_send = generate_add_flowmod(i)
             flowmod_to_send.serialize()
             send_flowmod_list.append(flowmod_to_send)
-            incoming_sdn_socket.write(flowmod_to_send.buf)
+            incoming_sdn_socket.write_into_read(flowmod_to_send.buf)
 
 
         # send a barrier
         barrier_to_send = generate_barrier()
         barrier_to_send.serialize()
-        incoming_sdn_socket.write(barrier_to_send.buf)
+        incoming_sdn_socket.write_into_read(barrier_to_send.buf)
         
         for sent_flowmod in reversed(send_flowmod_list):
             # read sdn message from output

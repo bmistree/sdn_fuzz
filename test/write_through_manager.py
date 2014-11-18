@@ -42,14 +42,13 @@ class WriteThroughManagerTest(TestClass):
         write_through_manager = WriteThroughMessageManager(
             incoming_sdn_socket,outgoing_sdn_socket)
         write_through_manager.start_service()
-        
 
         #### CHECK THAT WE CAN DESERIALIZE FLOWMODS #####
         
         # write a flowmod into incoming_sdn_socket
         written_sdn_message = generate_add_flowmod()        
         written_sdn_message.serialize()
-        incoming_sdn_socket.write(written_sdn_message.buf)
+        incoming_sdn_socket.write_into_read(written_sdn_message.buf)
         
         # read sdn message from output
         read_sdn_message = (
@@ -64,7 +63,7 @@ class WriteThroughManagerTest(TestClass):
         #### CHECK THAT WE CAN DESERIALIZE BARRIERS #####
         barrier_to_send = generate_barrier()
         barrier_to_send.serialize()
-        incoming_sdn_socket.write(barrier_to_send.buf)
+        incoming_sdn_socket.write_into_read(barrier_to_send.buf)
 
         read_barrier = (
             outgoing_sdn_message_reader.blocking_read_sdn_message())
@@ -75,7 +74,7 @@ class WriteThroughManagerTest(TestClass):
         #### CHECK THAT WE CAN CORRECTLY DESERIALIZE OTHER MESSAGES #####
         config_request_to_send = generate_config_request()
         config_request_to_send.serialize()
-        incoming_sdn_socket.write(config_request_to_send.buf)
+        incoming_sdn_socket.write_into_read(config_request_to_send.buf)
         
         # should be of type additional_parsers.UnparsedMessage
         read_config_request = (

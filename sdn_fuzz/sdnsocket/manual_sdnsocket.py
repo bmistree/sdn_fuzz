@@ -39,7 +39,7 @@ class ManualSDNSocket(SDNSocket):
         self._array_condition.release()
         return to_return
         
-    def write(self,bytes_to_write):
+    def write_into_read(self,bytes_to_write):
         '''
         Threadsafe.
         

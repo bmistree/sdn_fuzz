@@ -39,7 +39,7 @@ class SDNSingleMessageTest(TestClass):
         # write a flowmod
         written_sdn_message = generate_add_flowmod()        
         written_sdn_message.serialize()
-        sdn_socket.write(written_sdn_message.buf)
+        sdn_socket.write_into_read(written_sdn_message.buf)
         
         # read sdn message from system.
         read_sdn_message = sdn_message_reader.blocking_read_sdn_message()
@@ -53,7 +53,7 @@ class SDNSingleMessageTest(TestClass):
         #### CHECK THAT WE CAN DESERIALIZE BARRIERS #####
         barrier_to_send = generate_barrier()
         barrier_to_send.serialize()
-        sdn_socket.write(barrier_to_send.buf)
+        sdn_socket.write_into_read(barrier_to_send.buf)
 
         read_barrier = sdn_message_reader.blocking_read_sdn_message()
         if type(read_barrier) != type(barrier_to_send):
@@ -63,7 +63,7 @@ class SDNSingleMessageTest(TestClass):
         #### CHECK THAT WE CAN CORRECTLY DESERIALIZE OTHER MESSAGES #####
         config_request_to_send = generate_config_request()
         config_request_to_send.serialize()
-        sdn_socket.write(config_request_to_send.buf)
+        sdn_socket.write_into_read(config_request_to_send.buf)
         
         # should be of type additional_parsers.UnparsedMessage
         read_config_request = sdn_message_reader.blocking_read_sdn_message()
