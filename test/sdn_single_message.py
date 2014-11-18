@@ -13,6 +13,12 @@ from ryu.ofproto import ofproto_v1_0
 from ryu.ofproto.ofproto_protocol import ProtocolDesc
 import ryu.ofproto.ofproto_v1_0 as ofproto_v1_0
 
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__)),'..','ryu_extend'))
+import additional_parsers
+
 
 sdn_fuzz_folder = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),'..')
@@ -38,15 +44,16 @@ class SDNSingleMessageTest(TestClass):
         sdn_message_reader = SDNMessageReader(sdn_socket)
 
         # write a flowmod
-        written_sdn_message = self._generate_add_flowmod()
+        written_sdn_message = self._generate_add_flowmod()        
         written_sdn_message.serialize()
         sdn_socket.write(written_sdn_message.buf)
         
         # read sdn message from system.
         read_sdn_message = sdn_message_reader.blocking_read_sdn_message()
 
-        # check that read sdn message is same as sent.
-        if written_sdn_message != read_sdn_message:
+        # check that read sdn message is same as sent.  Using strs
+        # here because messages don't have clean overridden equals
+        if str(written_sdn_message) != str(read_sdn_message):
             return False
 
         return True
