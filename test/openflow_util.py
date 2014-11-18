@@ -16,8 +16,9 @@ import ryu.ofproto.ofproto_v1_0 as ofproto_v1_0
 OF_1_0_DATAPATH = ProtocolDesc(ofproto_v1_0.OFP_VERSION)
 
 
-def generate_add_flowmod():
-    in_port = 32
+def generate_add_flowmod(in_port=None):
+    if in_port is None:
+        in_port = 32
     rule = nx_match.ClsRule()
     rule.set_in_port(in_port)
     match_tuple = rule.match_tuple()

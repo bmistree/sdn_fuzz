@@ -1,7 +1,6 @@
 import threading
 
 from ..sdn_message_reader import SDNMessageReader
-#from sdn_fuzz.sdn_message_reader import SDNMessageReader
 
 
 class WriteThroughMessageManager(object):
