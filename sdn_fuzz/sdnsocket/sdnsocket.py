@@ -26,3 +26,10 @@ class SDNSocket(object):
         @param {bytearray} bytes_to_write
         '''
         pass
+
+    def write(self, bytes_to_write):
+        '''
+        Threadsafe.  Write into other endpoint's buffer.
+
+        @param {bytearray} bytes_to_write
+        '''
