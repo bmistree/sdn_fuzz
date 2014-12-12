@@ -25,12 +25,18 @@ from sdn_fuzz.sdn_message_reader import SDNMessageReader
 from sdn_fuzz.message_manager.write_through_message_manager import (
     WriteThroughMessageManager)
 
+class WriteThroughManagerBase(TestClass):
 
-class WriteThroughManagerTest(TestClass):
+    def __init__(self,write_through_message_manager_class):
+        '''
+        Should take in two sdnsockets to initialize a class: first
+        socket is socket listening on, second socket is socket sending
+        to.
+        '''
+        self.write_through_message_manager_class = (
+            write_through_message_manager_class)
 
-    def test_name(self):
-        return 'WriteThroughManager'
-    
+
     def run_test(self):
         '''
         @returns {boolean} --- True if test passed, false otherwise.
@@ -44,8 +50,7 @@ class WriteThroughManagerTest(TestClass):
             crossover_manual_sdn_socket())
 
         outgoing_sdn_message_reader = SDNMessageReader(outgoing_socket_switch)
-        
-        write_through_manager = WriteThroughMessageManager(
+        write_through_manager = self.write_through_message_manager_class(
             incoming_sdn_socket,outgoing_socket_manager)
         write_through_manager.start_service()
 
@@ -89,3 +94,12 @@ class WriteThroughManagerTest(TestClass):
             return False
         
         return True
+
+
+class WriteThroughManagerTest(WriteThroughManagerBase):
+    def __init__(self):
+        super(WriteThroughManagerTest,self).__init__(WriteThroughMessageManager)
+        
+    def test_name(self):
+        return 'WriteThroughManager'
+    
