@@ -4,12 +4,14 @@ from manual_socket import ManualSocketTest
 from sdn_single_message import SDNSingleMessageTest
 from write_through_manager import WriteThroughManagerTest
 from reverse_manager import ReverseManagerTest
+from error_manager_no_error import ErrorManagerNoErrorTest
 
 test_class_constructors = [
     SDNSingleMessageTest,
     WriteThroughManagerTest,
     ReverseManagerTest,
     ManualSocketTest,
+    ErrorManagerNoErrorTest
     ]
 
 def run_all():
