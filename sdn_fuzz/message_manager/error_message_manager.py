@@ -4,17 +4,20 @@ from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST, OFPT_FLOW_MOD
 
 # handling failure messages
 from ryu.ofproto.ofproto_v1_0 import OFPET_FLOW_MOD_FAILED, OFPFMFC_UNSUPPORTED
+from ryu.ofproto.ofproto_v1_0 import OFP_VERSION
 from ryu.ofproto.ofproto_v1_0_parser import OFPErrorMsg
+OF_1_0_DATAPATH = ProtocolDesc(OFP_VERSION)
 
 
 def generate_error_from_flow_mod(flow_mod_message):
     '''
     Should already be compiled
     '''
+    datapath = OF_1_0_DATAPATH
     fail_type = OFPET_FLOW_MOD_FAILED
     fail_code = OFPFMFC_UNSUPPORTED
     data = flow_mod_message.buf[0:60]
-    to_return = OFPErrorMsg(flow_mod_failed, fail_code,data)
+    to_return = OFPErrorMsg(datapath,flow_mod_failed, fail_code,data)
     to_return.xid = flow_mod_message.xid
     return to_return
 
