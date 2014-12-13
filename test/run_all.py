@@ -5,13 +5,15 @@ from sdn_single_message import SDNSingleMessageTest
 from write_through_manager import WriteThroughManagerTest
 from reverse_manager import ReverseManagerTest
 from error_manager_no_error import ErrorManagerNoErrorTest
+from error_manager_all_errors import ErrorManagerAllErrorsTest
 
 test_class_constructors = [
     SDNSingleMessageTest,
     WriteThroughManagerTest,
     ReverseManagerTest,
     ManualSocketTest,
-    ErrorManagerNoErrorTest
+    ErrorManagerNoErrorTest,
+    ErrorManagerAllErrorsTest
     ]
 
 def run_all():

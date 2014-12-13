@@ -5,6 +5,7 @@ from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST, OFPT_FLOW_MOD
 # handling failure messages
 from ryu.ofproto.ofproto_v1_0 import OFPET_FLOW_MOD_FAILED, OFPFMFC_UNSUPPORTED
 from ryu.ofproto.ofproto_v1_0 import OFP_VERSION
+from ryu.ofproto.ofproto_protocol import ProtocolDesc
 from ryu.ofproto.ofproto_v1_0_parser import OFPErrorMsg
 OF_1_0_DATAPATH = ProtocolDesc(OFP_VERSION)
 
@@ -17,7 +18,8 @@ def generate_error_from_flow_mod(flow_mod_message):
     fail_type = OFPET_FLOW_MOD_FAILED
     fail_code = OFPFMFC_UNSUPPORTED
     data = flow_mod_message.buf[0:60]
-    to_return = OFPErrorMsg(datapath,flow_mod_failed, fail_code,data)
+    to_return = OFPErrorMsg(datapath,fail_type, fail_code,data)
+    to_return.serialize()
     to_return.xid = flow_mod_message.xid
     return to_return
 
@@ -74,14 +76,14 @@ class ErrorFlowmodsMessageManager(object):
             msg.serialize()
             
             if msg.msg_type == OFPT_FLOW_MOD:
-                failure_msg = self.check_fail_flow_mod(msg.buf)
+                failure_msg = self.check_fail_flow_mod(msg)
                 if failure_msg is None:
                     # just forward the message along
                     self.sender_socket.write(msg.buf)
                 else:
                     # we should send the failure message back to the
                     # socket we received the message on.
-                    self.receiver_socet.write(failure_msg.buf)
+                    self.receiver_socket.write(failure_msg.buf)
             else:
                 # just forward the message along
                 self.sender_socket.write(msg.buf)

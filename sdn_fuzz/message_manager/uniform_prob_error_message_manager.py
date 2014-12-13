@@ -21,7 +21,7 @@ class UniformProbErrorMessageManager(ErrorFlowmodsMessageManager):
         ErrorFlowmodsMessageManager.check_fail_flow_mod
         '''
         if random.random() < self.failure_probability:
-            return generate_error_from_flow_mod(flow_mod_message)
+            return generate_error_from_flow_mod(incoming_flow_mod_msg)
 
         # do not fail out.
         return None
