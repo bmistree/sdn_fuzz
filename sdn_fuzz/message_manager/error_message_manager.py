@@ -2,6 +2,23 @@ import threading
 from ..sdn_message_reader import SDNMessageReader
 from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST, OFPT_FLOW_MOD
 
+# handling failure messages
+from ryu.ofproto.ofproto_v1_0 import OFPET_FLOW_MOD_FAILED, OFPFMFC_UNSUPPORTED
+from ryu.ofproto.ofproto_v1_0_parser import OFPErrorMsg
+
+
+def generate_error_from_flow_mod(flow_mod_message):
+    '''
+    Should already be compiled
+    '''
+    fail_type = OFPET_FLOW_MOD_FAILED
+    fail_code = OFPFMFC_UNSUPPORTED
+    data = flow_mod_message.buf[0:60]
+    to_return = OFPErrorMsg(flow_mod_failed, fail_code,data)
+    to_return.xid = flow_mod_message.xid
+    return to_return
+
+
 class ErrorFlowmodsMessageManager(object):
     '''
     When receive sdn messages on incoming queue, instantly write it

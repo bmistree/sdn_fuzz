@@ -1,5 +1,6 @@
 import random
-from .error_message_manager import ErrorFlowmodsMessageManager
+from .error_message_manager import (
+    ErrorFlowmodsMessageManager, generate_error_from_flow_mod)
 
 class UniformProbErrorMessageManager(ErrorFlowmodsMessageManager):
 
@@ -19,10 +20,8 @@ class UniformProbErrorMessageManager(ErrorFlowmodsMessageManager):
         For params @see
         ErrorFlowmodsMessageManager.check_fail_flow_mod
         '''
-        
         if random.random() < self.failure_probability:
-            # FIXME: actually craft error message here.
-            assert False
+            return generate_error_from_flow_mod(flow_mod_message)
 
         # do not fail out.
         return None
