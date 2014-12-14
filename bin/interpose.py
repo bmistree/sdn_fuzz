@@ -14,7 +14,7 @@ sys.path.append(os.path.join(base_dir,'..','submodules','ryu'))
 # adding ryu extend to system path and forcing it to be used as
 import ryu_extend.additional_parsers
 
-
+import json
 import socket
 import time
 
@@ -25,6 +25,8 @@ from sdn_fuzz.message_manager.write_through_message_manager import (
     WriteThroughMessageManager)
 from sdn_fuzz.message_manager.reverse_flowmods_message_manager import (
     ReverseFlowmodsMessageManager)
+from sdn_fuzz.message_manager.uniform_prob_error_message_manager import (
+    UniformProbErrorMessageManager)
 
 '''
 Allows running an interposition layer between controller and switch.
@@ -71,6 +73,19 @@ def run(reorder_type, listen_on_addr, controller_addr,additional_args):
     elif reorder_type == ReorderType.REVERSE:
         controller_to_switch_manager = ReverseFlowmodsMessageManager(
             sdn_controller_socket,sdn_switch_socket)
+    elif reorder_type == ReorderType.ERROR:
+        if additional_args is None:
+            assert False,'Require additional arguments for error types'
+        dict_additional_args = json.loads(additional_args)
+        if 'failure_probability' not in dict_additional_args:
+            assert_msg = (
+                'Require "failure_probability" to be set in for ' +
+                'additional args of error type')
+            assert False, assert_msg
+        failure_probability = dict_additional_args['failure_probability']
+        controller_to_switch_manager = UniformProbErrorMessageManager(
+            failure_probability,sdn_controller_socket,sdn_switch_socket)
+
     #### DEBUG
     else:
         assert False,'Unexpected reorder type'
