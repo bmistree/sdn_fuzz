@@ -52,8 +52,12 @@ def parse_args():
         help=('When we receive a connection from switch, try to connect' +
               'to a controller at this address.  Format: a.b.c.d:<port>.'),
         required=True)
+
+    parser.add_argument(
+        '--additional',type=str,
+        help=('Plan-specific arguments, generally stored as a json dict.'))
     
     args = parser.parse_args()
 
-    return args.type, args.listen_on_addr, args.controller_addr
+    return args.type, args.listen_on_addr, args.controller_addr, args.additional
     

@@ -33,7 +33,7 @@ See interpose_arg_helper.parse_args for expected input arguments.
 '''
 
     
-def run(reorder_type, listen_on_addr, controller_addr):
+def run(reorder_type, listen_on_addr, controller_addr,additional_args):
     '''
     @param {ReorderType.X} reorder_type
     
@@ -43,6 +43,9 @@ def run(reorder_type, listen_on_addr, controller_addr):
     @param {interpose_arg_helper.HostPortArgument} controller_addr ---
     Should connect to this address as soon as we have a connection
     from a switch.
+
+    @param {str or None} additional_args --- Additional args required
+    to initialize the selected reorder type.
     '''
 
     # start by listening for socket connections from switch
@@ -86,5 +89,6 @@ def run(reorder_type, listen_on_addr, controller_addr):
 
 
 if __name__ == '__main__':
-    (reorder_type,listen_on_addr,controller_addr) = parse_args()
-    run(reorder_type,listen_on_addr,controller_addr)
+    (reorder_type,listen_on_addr,controller_addr,additional_args) = (
+        parse_args())
+    run(reorder_type,listen_on_addr,controller_addr,additional_args)
