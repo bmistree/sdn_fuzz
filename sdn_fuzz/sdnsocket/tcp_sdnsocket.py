@@ -17,7 +17,7 @@ class TCPSDNSocket(object):
         
         @returns {bytearray} --- Returns at most num_bytes bytes.
         '''
-        assert(False,'Only allow blocking reads on tcp.')
+        assert False,'Only allow blocking reads on tcp.'
 
     def blocking_read(self,num_bytes_to_read):
         '''
@@ -34,7 +34,7 @@ class TCPSDNSocket(object):
         
         @param {bytearray} bytes_to_write
         '''
-        assert(False,'Disallowing write_into_read for tcp sockets')
+        assert False,'Disallowing write_into_read for tcp sockets'
 
     def write(self, bytes_to_write):
         '''
