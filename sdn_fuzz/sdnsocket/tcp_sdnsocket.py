@@ -26,7 +26,7 @@ class TCPSDNSocket(object):
         @returns {bytearray} --- Returns at most num_bytes bytes.
         '''
         with self.read_lock:
-            return self.socket.recv(num_bytes_to_read)
+            return bytearray(self.socket.recv(num_bytes_to_read))
 
     def write_into_read(self,bytes_to_write):
         '''
