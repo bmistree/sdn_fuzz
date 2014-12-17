@@ -4,7 +4,10 @@ from threading import RLock, Condition
 
 class ManualSDNSocket(SDNSocket):
 
-    def __init__(self):
+    def __init__(self,debug=False):
+
+        self.debug = debug
+        
         # append end, remove front.
         self._received_bytes_array = bytearray()
         self._receive_lock = RLock()
@@ -35,7 +38,7 @@ class ManualSDNSocket(SDNSocket):
             self._received_bytes_array,self._receive_lock,
             self._array_condition, num_bytes_to_read)
 
-    
+
     def write_into_read(self,bytes_to_write):
         '''
         Threadsafe.

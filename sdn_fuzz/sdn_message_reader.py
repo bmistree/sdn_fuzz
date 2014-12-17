@@ -17,16 +17,20 @@ class SDNMessageReader(object):
         '''
         self._sdn_socket = sdn_socket
         
-        
-    def blocking_read_sdn_message(self):
+
+    def blocking_read_sdn_message(self,block_read_written=False):
         '''
         @returns an SDN message
         '''
+        reader_method = self._sdn_socket.blocking_read
+        if block_read_written:
+            reader_method = self._sdn_socket.blocking_read_written
+        
         # first read openflow header
-        msg_buffer = self._sdn_socket.blocking_read(OFP_HEADER_SIZE)
+        msg_buffer = reader_method(OFP_HEADER_SIZE)
         while len(msg_buffer) != OFP_HEADER_SIZE:
             diff = OFP_HEADER_SIZE - len(msg_buffer)
-            msg_buffer.extend(self._sdn_socket.blocking_read(diff))
+            msg_buffer.extend(reader_method(diff))
 
         # based on size of openflow header, decide how much more to
         # read
@@ -34,7 +38,7 @@ class SDNMessageReader(object):
 
         while len(msg_buffer) != msg_len:
             diff = msg_len - len(msg_buffer)
-            msg_buffer.extend(self._sdn_socket.blocking_read(diff))
+            msg_buffer.extend(reader_method(diff))
 
         msg = ofproto_parser.msg(
             _OF_1_0_DATAPATH, version, msg_type, msg_len,

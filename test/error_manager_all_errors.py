@@ -23,6 +23,8 @@ from test_class import TestClass
 from sdn_fuzz.sdnsocket.manual_sdnsocket import ManualSDNSocket
 from sdn_fuzz.sdn_message_reader import SDNMessageReader
 
+NUM_WRITES = 500
+
 class ErrorManagerAllErrorsTest(TestClass):
 
     def __init__(self):
@@ -36,9 +38,8 @@ class ErrorManagerAllErrorsTest(TestClass):
         @returns {boolean} --- True if test passed, false otherwise.
         '''
         # incoming_socket ---> Manager ---> dummy_sdn_socket
-        incoming_sdn_socket = ManualSDNSocket()
+        incoming_sdn_socket = ManualSDNSocket(True)
         dummy_sdn_socket = ManualSDNSocket()
-        incoming_sdn_socket_reader = SDNMessageReader(incoming_sdn_socket)
 
         all_errors_message_manager = UniformProbErrorMessageManager(
             1.0,incoming_sdn_socket,dummy_sdn_socket)
@@ -48,14 +49,15 @@ class ErrorManagerAllErrorsTest(TestClass):
         #### CHECK THAT WE CAN DESERIALIZE FLOWMODS #####
         
         # write a set of flow mods to other side
-        NUM_WRITES = 5
         for i in range(0,NUM_WRITES):
             written_sdn_message = generate_add_flowmod()        
             written_sdn_message.serialize()
             incoming_sdn_socket.write_into_read(written_sdn_message.buf)
 
+        incoming_sdn_socket_reader = SDNMessageReader(incoming_sdn_socket)
         for i in range(0,NUM_WRITES):
-            incoming_sdn_socket_reader.blocking_read_sdn_message()
+            read = (
+                incoming_sdn_socket_reader.blocking_read_sdn_message(True))
         
         return True
 
