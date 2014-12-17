@@ -25,6 +25,8 @@ from sdn_fuzz.sdn_message_reader import SDNMessageReader
 from sdn_fuzz.message_manager.write_through_message_manager import (
     WriteThroughMessageManager)
 
+NUM_WRITES=25
+
 class WriteThroughManagerBase(TestClass):
 
     def __init__(self,write_through_message_manager_class):
@@ -55,20 +57,20 @@ class WriteThroughManagerBase(TestClass):
         write_through_manager.start_service()
 
         #### CHECK THAT WE CAN DESERIALIZE FLOWMODS #####
-        
-        # write a flowmod into incoming_sdn_socket
-        written_sdn_message = generate_add_flowmod()        
-        written_sdn_message.serialize()
-        incoming_sdn_socket.write_into_read(written_sdn_message.buf)
-        
-        # read sdn message from output
-        read_sdn_message = (
-            outgoing_sdn_message_reader.blocking_read_sdn_message())
+        for i in range(0,NUM_WRITES):
+            # write a flowmod into incoming_sdn_socket
+            written_sdn_message = generate_add_flowmod(i)
+            written_sdn_message.serialize()
+            incoming_sdn_socket.write_into_read(written_sdn_message.buf)
 
-        # check that read sdn message is same as sent.  Using strs
-        # here because messages don't have clean overridden equals
-        if str(written_sdn_message) != str(read_sdn_message):
-            return False
+            # read sdn message from output
+            read_sdn_message = (
+                outgoing_sdn_message_reader.blocking_read_sdn_message())
+
+            # check that read sdn message is same as sent.  Using strs
+            # here because messages don't have clean overridden equals
+            if str(written_sdn_message) != str(read_sdn_message):
+                return False
 
         #### CHECK THAT WE CAN DESERIALIZE BARRIERS #####
         barrier_to_send = generate_barrier()
