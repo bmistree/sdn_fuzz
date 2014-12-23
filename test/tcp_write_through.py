@@ -5,6 +5,7 @@ from openflow_util import (
 import socket
 import os
 import sys
+import time
 
 sys.path.append(
     os.path.join(
@@ -45,6 +46,9 @@ def start_listening(port_to_listen_on):
     t = threading.Thread(target=internal_thread)
     t.setDaemon(True)
     t.start()
+    # wait a short period of time to insure that internal thread is
+    # scheduled.
+    time.sleep(1)
     return mvar
 
     
@@ -89,6 +93,7 @@ class TCPWriteThroughTest(TestClass):
         interposition_to_controller_socket.connect(
             ('0.0.0.0',CONTROLLER_PORT))
 
+        
         controller_incoming_socket = controller_incoming_socket_mvar.get()
         
         # make sdn sockets
