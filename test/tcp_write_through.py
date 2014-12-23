@@ -28,7 +28,7 @@ from sdn_fuzz.message_manager.write_through_message_manager import (
     WriteThroughMessageManager)
 
 
-SWITCH_CONNECTING_TO_PORT = 35506
+SWITCH_CONNECTING_TO_PORT = 45306
 CONTROLLER_PORT = SWITCH_CONNECTING_TO_PORT + 1
 
 import Queue # using as an mvar
@@ -119,15 +119,25 @@ class TCPWriteThroughTest(TestClass):
             sdn_interposition_to_controller_socket,
             sdn_switch_incoming_interposition_socket)
 
+        switch_to_controller_manager.start_service()
+        controller_to_switch_manager.start_service()
+        
 
         # write into sdn_switch_to_interposition_socket and try to
         # read it out of sdn_controller_incoming_socket.
+        message_sent_list = []
         for i in range(0,NUM_FLOWMODS_TO_SEND):
             flowmod_to_send = generate_add_flowmod(i)
             flowmod_to_send.serialize()
             sdn_switch_to_interposition_socket.write(flowmod_to_send.buf)
+            message_sent_list.append(flowmod_to_send)
+            
+        # read messages.  check if messages agree
+        sdn_message_reader = SDNMessageReader(sdn_controller_incoming_socket)
+        for i in range(0,NUM_FLOWMODS_TO_SEND):
+            flowmod_received = sdn_message_reader.blocking_read_sdn_message()
+            flowmod_received.serialize()
+            if message_sent_list[i].buf != flowmod_received.buf:
+                return False
 
-            
-            
-        # FIXME: always returns true.
         return True
