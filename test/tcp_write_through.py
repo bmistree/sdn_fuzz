@@ -52,6 +52,7 @@ def start_listening(port_to_listen_on):
     return mvar
 
     
+NUM_FLOWMODS_TO_SEND = 20
 
 class TCPWriteThroughTest(TestClass):
 
@@ -118,5 +119,15 @@ class TCPWriteThroughTest(TestClass):
             sdn_interposition_to_controller_socket,
             sdn_switch_incoming_interposition_socket)
 
+
+        # write into sdn_switch_to_interposition_socket and try to
+        # read it out of sdn_controller_incoming_socket.
+        for i in range(0,NUM_FLOWMODS_TO_SEND):
+            flowmod_to_send = generate_add_flowmod(i)
+            flowmod_to_send.serialize()
+            sdn_switch_to_interposition_socket.write(flowmod_to_send.buf)
+
+            
+            
         # FIXME: always returns true.
         return True
