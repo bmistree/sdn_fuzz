@@ -43,5 +43,6 @@ class SDNMessageReader(object):
         msg = ofproto_parser.msg(
             _OF_1_0_DATAPATH, version, msg_type, msg_len,
             xid, str(msg_buffer))
-        
+
+        msg.original_buffer = msg_buffer
         return msg
