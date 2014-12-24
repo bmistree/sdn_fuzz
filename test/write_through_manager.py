@@ -1,6 +1,7 @@
 # imported first so that import puts ryu on sys path.
 from openflow_util import (
-    generate_add_flowmod, generate_barrier, generate_config_request)
+    generate_add_flowmod, generate_barrier, generate_config_request,
+    generate_switch_features_buffer)
 
 import os
 import sys
@@ -94,6 +95,22 @@ class WriteThroughManagerBase(TestClass):
 
         if read_config_request.buf != config_request_to_send.buf:
             return False
+
+
+        # send a bunch of switch features.
+        switch_features_buffer_list = []
+        for i in range(0,10):
+            buf_to_write = generate_switch_features_buffer()
+            incoming_sdn_socket.write_into_read(buf_to_write)
+            switch_features_buffer_list.append(buf_to_write)
+
+        for i in range(0,10):
+            read_config_request = (
+                outgoing_sdn_message_reader.blocking_read_sdn_message())
+            read_config_request.serialize()
+            
+            if switch_features_buffer_list[i] != read_config_request.buf:
+                return False
         
         return True
 
