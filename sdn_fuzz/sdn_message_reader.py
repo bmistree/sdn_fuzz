@@ -43,14 +43,5 @@ class SDNMessageReader(object):
         msg = ofproto_parser.msg(
             _OF_1_0_DATAPATH, version, msg_type, msg_len,
             xid, str(msg_buffer))
-
-        if msg is None:
-            import pdb
-            pdb.set_trace()
-            msg = ofproto_parser.msg(
-                _OF_1_0_DATAPATH, version, msg_type, msg_len,
-                xid, str(msg_buffer))
-            
-            print '\nThis is msg_type: ' + str(msg_type) + '\n'
         
         return msg
