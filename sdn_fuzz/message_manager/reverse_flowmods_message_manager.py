@@ -4,8 +4,9 @@ from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST, OFPT_FLOW_MOD
 
 class ReverseFlowmodsMessageManager(object):
     '''
-    When receive sdn messages on incoming queue, instantly write it
-    out on sender socket.
+    When receive flow mod sdn messages on incoming queue, delay until
+    receive a barrier and then send out buffered flow mods in reverse
+    order of when they were accepted.
     '''
 
     def __init__(self,receiver_socket,sender_socket):
