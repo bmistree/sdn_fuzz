@@ -58,6 +58,7 @@ class ReverseFlowmodsMessageManager(object):
             if msg.msg_type == OFPT_BARRIER_REQUEST:
                 self._send_outstanding(
                     self.received_flowmods_list,msg.original_buffer)
+                self.received_flowmods_list = []
             elif msg.msg_type == OFPT_FLOW_MOD:
                 self.received_flowmods_list.append(msg.original_buffer)
             else:
