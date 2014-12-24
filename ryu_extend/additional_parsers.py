@@ -156,3 +156,13 @@ class DummyFeaturesReplyParser(object):
     @classmethod
     def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
         return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_VENDOR
+del _MSG_PARSERS[OFPT_VENDOR]
+@_register_parser
+@_set_msg_type(OFPT_VENDOR)
+class DummyVendorParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
