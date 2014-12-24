@@ -54,7 +54,7 @@ def generate_switch_features_buffer():
     msg_type = {'buf': '\x06', 'val': ofproto_v1_0.OFPT_FEATURES_REPLY}
     msg_len_val = ofproto_v1_0.OFP_SWITCH_FEATURES_SIZE \
         + ofproto_v1_0.OFP_PHY_PORT_SIZE
-    msg_len = {'buf': '\x00\x4c', 'val': msg_len_val}
+    msg_len = {'buf': '\x00\x50', 'val': msg_len_val}
     xid = {'buf': '\xcc\x0a\x41\xd4', 'val': 3423224276}
 
     # OFP_SWITCH_FEATURES_PACK_STR
