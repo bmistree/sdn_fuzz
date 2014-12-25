@@ -1,4 +1,5 @@
 import threading
+import time
 import datetime
 from ..sdn_message_reader import SDNMessageReader
 from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST, OFPT_FLOW_MOD
@@ -62,7 +63,7 @@ class TimedReverseFlowmodsMessageManager(object):
                     sleep_time = .5
                 else:
                     sleep_time =  (
-                        seconds_since_last_flowmod - self.timeout_seconds + .01)
+                        self.timeout_seconds - seconds_since_last_flowmod + .01)
         
         
     def start_service(self):
@@ -96,8 +97,8 @@ class TimedReverseFlowmodsMessageManager(object):
             # reset receipt timer because sent out last outstanding
             # message.
             self.last_received_time = None
-                
-        
+
+            
     def _start_forwarding(self):
         while True:
             # msg will either be a ryu message or an unparsed message.
@@ -109,7 +110,7 @@ class TimedReverseFlowmodsMessageManager(object):
                 if msg.msg_type == OFPT_BARRIER_REQUEST:
                     self._send_outstanding(msg.original_buffer)
                 elif msg.msg_type == OFPT_FLOW_MOD:
-                    self.last_recevied_time = datetime.datetime.now()
+                    self.last_received_time = datetime.datetime.now()
                     self.received_flowmods_list.append(msg.original_buffer)
                 else:
                     # just forward the message along: it's non-barrier
