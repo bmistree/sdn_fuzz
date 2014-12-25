@@ -6,6 +6,7 @@ class ReorderType(object):
     REVERSE = 'reverse'
     ERROR = 'error'
 
+    
 class HostPortArgument(object):
     def __init__(self,value):
         '''
