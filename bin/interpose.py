@@ -91,6 +91,7 @@ def run(reorder_type, listen_on_addr, controller_addr,additional_args):
         if additional_args is None:
             assert False,'Require additional arguments for timed reverse'
             
+        dict_additional_args = json.loads(additional_args)
         if 'timeout_seconds' not in dict_additional_args:
             assert_msg = (
                 'Require "timeout_seconds" to be set in for ' +
