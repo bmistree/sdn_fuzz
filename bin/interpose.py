@@ -25,6 +25,8 @@ from sdn_fuzz.message_manager.write_through_message_manager import (
     WriteThroughMessageManager)
 from sdn_fuzz.message_manager.reverse_flowmods_message_manager import (
     ReverseFlowmodsMessageManager)
+from sdn_fuzz.message_manager.timed_reverse_flowmods_message_manager import (
+    TimedReverseFlowmodsMessageManager)
 from sdn_fuzz.message_manager.uniform_prob_error_message_manager import (
     UniformProbErrorMessageManager)
 
@@ -85,7 +87,20 @@ def run(reorder_type, listen_on_addr, controller_addr,additional_args):
         failure_probability = dict_additional_args['failure_probability']
         controller_to_switch_manager = UniformProbErrorMessageManager(
             failure_probability,sdn_controller_socket,sdn_switch_socket)
+    elif reorder_type == ReorderType.TIMED_REVERSE:
+        if additional_args is None:
+            assert False,'Require additional arguments for timed reverse'
+            
+        if 'timeout_seconds' not in dict_additional_args:
+            assert_msg = (
+                'Require "timeout_seconds" to be set in for ' +
+                'additional args of timed reverse error type')
+            assert False, assert_msg
 
+        timeout_seconds = float(dict_additional_args['timeout_seconds'])
+        controller_to_switch_manager = TimedReverseFlowmodsMessageManager(
+            timeout_seconds,sdn_controller_socket,sdn_switch_socket)
+        
     #### DEBUG
     else:
         assert False,'Unexpected reorder type'
