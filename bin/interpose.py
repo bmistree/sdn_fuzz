@@ -56,6 +56,11 @@ def run(reorder_type, listen_on_addr, controller_addr,additional_args):
     s.listen(1)
 
     switch_socket, _ = s.accept()
+    # FIXME: It is so dumb that I need to do this: essentially, it
+    # appears that when an ovs switch connects, it disconnects and
+    # then reconnects quickly.  Eventually, want to get to a point
+    # where any new connection gets assigned to a new switch.
+    switch_socket, _ = s.accept()
     sdn_switch_socket = TCPSDNSocket(switch_socket)
 
     # switch has connected, connect to controller
