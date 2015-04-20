@@ -6,6 +6,8 @@ from write_through_manager import WriteThroughManagerTest
 from reverse_manager import ReverseManagerTest
 from error_manager_no_error import ErrorManagerNoErrorTest
 from error_manager_all_errors import ErrorManagerAllErrorsTest
+from tcp_write_through import TCPWriteThroughTest
+from timed_reverse_manager import TimedReverseManagerTest
 
 test_class_constructors = [
     SDNSingleMessageTest,
@@ -13,7 +15,9 @@ test_class_constructors = [
     ReverseManagerTest,
     ManualSocketTest,
     ErrorManagerNoErrorTest,
-    ErrorManagerAllErrorsTest
+    ErrorManagerAllErrorsTest,
+    TCPWriteThroughTest,
+    TimedReverseManagerTest
     ]
 
 def run_all():

@@ -37,4 +37,4 @@ class WriteThroughMessageManager(object):
             # in either case, should support serialize + buf calls.
             msg = self.sdn_message_reader.blocking_read_sdn_message()
             msg.serialize()
-            self.sender_socket.write(msg.buf)
+            self.sender_socket.write(msg.original_buffer)

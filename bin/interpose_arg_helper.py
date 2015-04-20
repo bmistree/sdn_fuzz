@@ -5,7 +5,9 @@ class ReorderType(object):
     WRITE_THROUGH = 'write_through'
     REVERSE = 'reverse'
     ERROR = 'error'
+    TIMED_REVERSE = 'timed_reverse'
 
+    
 class HostPortArgument(object):
     def __init__(self,value):
         '''
@@ -38,7 +40,7 @@ def parse_args():
     parser.add_argument(
         '--type',
         choices=[ReorderType.WRITE_THROUGH,ReorderType.REVERSE,
-                 ReorderType.ERROR],
+                 ReorderType.ERROR,ReorderType.TIMED_REVERSE],
         default=ReorderType.WRITE_THROUGH,
         help='How to treat flowmods received between barriers')
 

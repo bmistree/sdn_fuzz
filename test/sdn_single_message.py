@@ -46,7 +46,7 @@ class SDNSingleMessageTest(TestClass):
 
         # check that read sdn message is same as sent.  Using strs
         # here because messages don't have clean overridden equals
-        if str(written_sdn_message) != str(read_sdn_message):
+        if written_sdn_message.buf != read_sdn_message.original_buffer:
             return False
 
 

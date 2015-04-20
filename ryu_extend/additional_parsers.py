@@ -5,6 +5,7 @@ from ryu.ofproto.ofproto_v1_0 import (
     OFP_MATCH_PACK_STR, OFP_MATCH_SIZE, OFP_HEADER_SIZE,
     OFP_FLOW_MOD_PACK_STR0,OFPT_FLOW_MOD, OFP_FLOW_MOD_SIZE)
 
+
 @_register_parser
 @_set_msg_type(OFPT_FLOW_MOD)
 class FlowModParser(object):
@@ -141,6 +142,27 @@ from ryu.ofproto.ofproto_v1_0 import OFPT_STATS_REQUEST
 @_register_parser
 @_set_msg_type(OFPT_STATS_REQUEST)
 class DummyQueueGetConfigRequestParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_FEATURES_REPLY
+from ryu.ofproto.ofproto_v1_0_parser import _MSG_PARSERS
+del _MSG_PARSERS[OFPT_FEATURES_REPLY]
+@_register_parser
+@_set_msg_type(OFPT_FEATURES_REPLY)
+class DummyFeaturesReplyParser(object):
+    @classmethod
+    def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
+        return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)
+
+    
+from ryu.ofproto.ofproto_v1_0 import OFPT_VENDOR
+del _MSG_PARSERS[OFPT_VENDOR]
+@_register_parser
+@_set_msg_type(OFPT_VENDOR)
+class DummyVendorParser(object):
     @classmethod
     def parser(cls, datapath, version, msg_type, msg_len, xid, buf):
         return UnparsedMessage(datapath,version,msg_type,msg_len,xid,buf)

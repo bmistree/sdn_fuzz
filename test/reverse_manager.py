@@ -75,7 +75,7 @@ class ReverseManagerTest(TestClass):
             read_sdn_message = (
                 outgoing_sdn_message_reader.blocking_read_sdn_message())
 
-            if str(read_sdn_message) != str(sent_flowmod):
+            if read_sdn_message.original_buffer != sent_flowmod.buf:
                 return False
 
         # check that also received final barrier
