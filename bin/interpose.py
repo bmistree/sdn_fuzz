@@ -3,6 +3,8 @@
 # adding sdn_fuzz to sys.path
 import os
 import sys
+import threading
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 sdn_fuzz_folder = os.path.join(base_dir,'..')
@@ -51,18 +53,19 @@ def run(reorder_type, listen_on_addr, controller_addr,additional_args):
     @param {str or None} additional_args --- Additional args required
     to initialize the selected reorder type.
     '''
-
-    # start by listening for socket connections from switch
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((listen_on_addr.hostname, listen_on_addr.port))
-    s.listen(1)
+    while True:
 
-    switch_socket, _ = s.accept()
-    # FIXME: It is so dumb that I need to do this: essentially, it
-    # appears that when an ovs switch connects, it disconnects and
-    # then reconnects quickly.  Eventually, want to get to a point
-    # where any new connection gets assigned to a new switch.
-    switch_socket, _ = s.accept()
+        # start by listening for socket connections from switch
+        s.listen(1)
+
+        switch_socket, _ = s.accept()
+        t = threading.Thread(target=start_message_managers,
+                             args=(switch_socket,))
+        t.start()
+
+def start_message_managers(switch_socket):
     sdn_switch_socket = TCPSDNSocket(switch_socket)
 
     # switch has connected, connect to controller
@@ -119,9 +122,6 @@ def run(reorder_type, listen_on_addr, controller_addr,additional_args):
     # start both managers
     switch_to_controller_manager.start_service()
     controller_to_switch_manager.start_service()
-    
-    while True:
-        time.sleep(5)
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+import socket
 import threading
 from ..sdn_message_reader import SDNMessageReader
 from ryu.ofproto.ofproto_v1_0 import OFPT_BARRIER_REQUEST, OFPT_FLOW_MOD
@@ -75,16 +76,18 @@ class ErrorFlowmodsMessageManager(object):
             msg = self.sdn_message_reader.blocking_read_sdn_message()
             msg.serialize()
             
-            if msg.msg_type == OFPT_FLOW_MOD:
-                failure_msg = self.check_fail_flow_mod(msg)
-                if failure_msg is None:
+            try:
+                if msg.msg_type == OFPT_FLOW_MOD:
+                    failure_msg = self.check_fail_flow_mod(msg)
+                    if failure_msg is None:
+                        # just forward the message along
+                        self.sender_socket.write(msg.original_buffer)
+                    else:
+                        # we should send the failure message back to the
+                        # socket we received the message on.
+                        self.receiver_socket.write(failure_msg.buf)
+                else:
                     # just forward the message along
                     self.sender_socket.write(msg.original_buffer)
-                else:
-                    # we should send the failure message back to the
-                    # socket we received the message on.
-                    self.receiver_socket.write(failure_msg.buf)
-            else:
-                # just forward the message along
-                self.sender_socket.write(msg.original_buffer)
-
+            except socket.error:
+                break

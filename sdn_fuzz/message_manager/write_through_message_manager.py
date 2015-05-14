@@ -1,3 +1,4 @@
+import socket
 import threading
 
 from ..sdn_message_reader import SDNMessageReader
@@ -37,4 +38,7 @@ class WriteThroughMessageManager(object):
             # in either case, should support serialize + buf calls.
             msg = self.sdn_message_reader.blocking_read_sdn_message()
             msg.serialize()
-            self.sender_socket.write(msg.original_buffer)
+            try:
+                self.sender_socket.write(msg.original_buffer)
+            except socket.error:
+                break
