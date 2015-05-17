@@ -1,3 +1,4 @@
+import socket
 import threading
 import time
 import datetime
@@ -107,12 +108,15 @@ class TimedReverseFlowmodsMessageManager(object):
             msg.serialize()
 
             with self._received_flow_mods_lock:
-                if msg.msg_type == OFPT_BARRIER_REQUEST:
-                    self._send_outstanding(msg.original_buffer)
-                elif msg.msg_type == OFPT_FLOW_MOD:
-                    self.last_received_time = datetime.datetime.now()
-                    self.received_flowmods_list.append(msg.original_buffer)
-                else:
-                    # just forward the message along: it's non-barrier
-                    # and non-flow mod
-                    self.sender_socket.write(msg.original_buffer)
+                try:
+                    if msg.msg_type == OFPT_BARRIER_REQUEST:
+                        self._send_outstanding(msg.original_buffer)
+                    elif msg.msg_type == OFPT_FLOW_MOD:
+                        self.last_received_time = datetime.datetime.now()
+                        self.received_flowmods_list.append(msg.original_buffer)
+                    else:
+                        # just forward the message along: it's non-barrier
+                        # and non-flow mod
+                        self.sender_socket.write(msg.original_buffer)
+                except socket.error:
+                    break
